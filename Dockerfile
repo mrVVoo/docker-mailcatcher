@@ -2,6 +2,7 @@ FROM alpine:latest
 
 ENV VERSION 0.7.1
 ENV HTTP_PORT 1080
+ENV HTTP_PATH /
 ENV SMTP_PORT 1025
 
 RUN apk add --update ruby ruby-dev ruby-etc ruby-bigdecimal sqlite sqlite-dev build-base libstdc++ ca-certificates && \
@@ -12,4 +13,4 @@ RUN apk add --update ruby ruby-dev ruby-etc ruby-bigdecimal sqlite sqlite-dev bu
 
 EXPOSE $SMTP_PORT $HTTP_PORT
 
-CMD mailcatcher -f --ip=0.0.0.0 --smtp-port=$SMTP_PORT --http-port=$HTTP_PORT
+CMD mailcatcher --ip=0.0.0.0 --smtp-port=$SMTP_PORT --http-port=$HTTP_PORT --http-path=$HTTP_PATH --foreground --no-quit
