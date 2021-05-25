@@ -1,15 +1,19 @@
-FROM alpine:latest
+FROM ruby:2.7-alpine
 
 ENV VERSION 0.7.1
 ENV HTTP_PORT 1080
 ENV HTTP_PATH /
 ENV SMTP_PORT 1025
 
-RUN apk add --update ruby ruby-dev ruby-etc ruby-bigdecimal sqlite sqlite-dev build-base libstdc++ ca-certificates && \
-    gem install json --no-ri --no-rdoc && \
-    gem install mailcatcher -v $VERSION --no-ri --no-rdoc && \
-    apk del --purge ruby-dev build-base && \
-    rm -rf /var/cache/apk/*
+RUN set -xe \
+    && apk add --no-cache \
+        libstdc++ \
+        sqlite-libs \
+    && apk add --no-cache --virtual .build-deps \
+        build-base \
+        sqlite-dev \
+    && gem install mailcatcher -v $VERSION --no-document \
+    && apk del .build-deps
 
 EXPOSE $SMTP_PORT $HTTP_PORT
 
